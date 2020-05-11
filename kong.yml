@@ -11,10 +11,10 @@ spec:
   resources:
     limits:
       cpu: 500m
-      memory: 2G
+      memory: 1G
     requests:
       cpu: 100m
-      memory: 512Mi
+      memory: 200Mi
   ingressController:
     enabled: true
     installCRDs: false
