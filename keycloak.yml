@@ -1,0 +1,46 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: keycloak-api-platform
+  labels:
+    app: keycloak-api-platform
+spec:
+  instances: 1
+  externalAccess:
+    enabled: true
+  podDisruptionBudget:
+    enabled: True
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: keycloakrealm-api-platform
+  labels:
+    app: keycloak-api-platform
+spec:
+  realm:
+    id: api-platform
+    realm: api-platform
+    enabled: true
+    displayName: API Platform Realm
+  instanceSelector:
+    matchLabels:
+      app: keycloak-api-platform
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: kong-client-secret
+  labels:
+    app: keycloak-api-platform
+spec:
+  realmSelector:
+    matchLabels:
+      app: keycloak-api-platform
+  client:
+    clientId: kong
+    protocol: openid-connect
+    secret: kong-secret
+    clientAuthenticatorType: client-secret
+    publicClient: false
+
