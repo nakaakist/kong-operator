@@ -1,7 +1,7 @@
 KEYCLOAK_VERSION=9.0.2
-KEYCLOAK_OPERATOR_DIR=keycloak-operator-$(KEYCLOAK_VERSION)
+KEYCLOAK_OPERATOR_DIR=keycloak/keycloak-operator-$(KEYCLOAK_VERSION)
 KONG_VERSION=0.2.6
-KONG_OPERATOR_DIR=kong-operator-$(KONG_VERSION)
+KONG_OPERATOR_DIR=kong/kong-operator-$(KONG_VERSION)
 
 .PHONY: cluster
 cluster:
@@ -10,6 +10,7 @@ cluster:
 		curl -LO https://github.com/keycloak/keycloak-operator/archive/$(KEYCLOAK_VERSION).tar.gz; \
 		tar -zxvf $(KEYCLOAK_VERSION).tar.gz; \
 		rm -rf $(KEYCLOAK_VERSION).tar.gz; \
+		mv keycloak-operator-$(KEYCLOAK_VERSION) $(KEYCLOAK_OPERATOR_DIR); \
 	fi
 	kubectl apply -f $(KEYCLOAK_OPERATOR_DIR)/deploy/crds/
 	kubectl apply -f $(KEYCLOAK_OPERATOR_DIR)/deploy/role.yaml
@@ -21,6 +22,7 @@ cluster:
 		curl -LO https://github.com/Kong/kong-operator/archive/v$(KONG_VERSION).tar.gz; \
 		tar -zxvf v$(KONG_VERSION).tar.gz; \
 		rm -rf v$(KONG_VERSION).tar.gz; \
+		mv kong-operator-$(KONG_VERSION) $(KONG_OPERATOR_DIR); \
 	fi
 	kubectl apply -f $(KONG_OPERATOR_DIR)/deploy/crds/charts_v1alpha1_kong_crd.yaml
 	kubectl apply -f $(KONG_OPERATOR_DIR)/deploy/

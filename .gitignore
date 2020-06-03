@@ -1,2 +1,2 @@
-keycloak-operator-*/*
-kong-operator-*/*
+keycloak/keycloak-operator-*/*
+kong/kong-operator-*/*
