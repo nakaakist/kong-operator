@@ -1,0 +1,9 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: oidc-for-keycloak
+config:
+  client_id: kong
+  client_secret: kong-secret
+  discovery: https://keycloak:8443/auth/realms/api-platform/.well-known/openid-configuration
+plugin: oidc

@@ -2,6 +2,7 @@ KEYCLOAK_VERSION=9.0.2
 KEYCLOAK_OPERATOR_DIR=keycloak/keycloak-operator-$(KEYCLOAK_VERSION)
 KONG_VERSION=0.2.6
 KONG_OPERATOR_DIR=kong/kong-operator-$(KONG_VERSION)
+KONG_IMAGE_NAME=kong-for-kong-operator
 
 .PHONY: cluster
 cluster:
@@ -34,3 +35,23 @@ clean:
 	kubectl get crd --no-headers=true -o name | awk '/keycloak.org/{print $1}' | xargs kubectl delete
 	kubectl delete -f $(KONG_OPERATOR_DIR)/deploy/
 	kubectl delete -f $(KONG_OPERATOR_DIR)/deploy/crds/charts_v1alpha1_kong_crd.yaml
+
+.PHONY: kong-image
+kong-image:
+	echo "\n\nbuilding docker image for kong...\n\n"
+	docker image build -t ${KONG_IMAGE_NAME} ./kong/build
+
+.PHONY: upload-kong-image-for-kind
+upload-kong-image-for-kind:
+	kind load docker-image ${KONG_IMAGE_NAME}
+
+.PHONY: kong
+kong: kong-image upload-kong-image-for-kind
+	echo "\n\ndeploying kong resources...\n\n"
+	kubectl create configmap kong-plugin-oidc --from-file kong/plugins/oidc
+	kubectl apply -f kong/
+
+.PHONY: clean-kong
+clean-kong:
+	kubectl delete configmap kong-plugin-oidc
+	kubectl delete -f kong/

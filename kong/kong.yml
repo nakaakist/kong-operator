@@ -3,6 +3,10 @@ kind: Kong
 metadata:
   name: example-kong
 spec:
+  image:
+    repository: kong-for-kong-operator
+    tag: latest
+    pullPolicy: Never
   proxy:
     type: NodePort
   env:
@@ -18,3 +22,7 @@ spec:
   ingressController:
     enabled: true
     installCRDs: false
+  plugins:
+    configMaps:
+    - name: kong-plugin-oidc
+      pluginName: oidc

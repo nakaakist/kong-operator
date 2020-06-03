@@ -5,6 +5,7 @@ metadata:
   annotations:
     konghq.com/strip-path: "true"
     kubernetes.io/ingress.class: "kong"
+    konghq.com/plugins: "oidc-for-keycloak"
 spec:
   rules:
   - http:
